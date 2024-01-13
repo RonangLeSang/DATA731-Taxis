@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def clean_df(original_df):
-    return pd.DataFrame(original_df[["day", "hour", "PULocationID", "DOLocationID"]])
+    return pd.DataFrame(original_df[["day", "hour", "PULocationID", "DOLocationID", "trip_duration"]])
 
 
 def load_df(path):
