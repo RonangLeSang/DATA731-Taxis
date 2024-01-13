@@ -10,7 +10,7 @@ def load_df(path):
 
 
 def get_day(df):
-    df["day"] = df["pickup_datetime"].dt.dayofweek
+    df["day"] = df["pickup_datetime"].dt.day_name()
     return df
 
 
@@ -22,7 +22,11 @@ def add_trip_duration(df):
     df["pickup_datetime"] = pd.to_datetime(df["pickup_datetime"])
     df["dropoff_datetime"] = pd.to_datetime(df["dropoff_datetime"])
     df["trip_duration"] = (df["dropoff_datetime"] - df["pickup_datetime"]).dt.total_seconds()
-    return df
+
+
+def location_to_string(df):
+    df["PULocationID"].to_string()
+    df["DOLocationID"].to_string()
 
 
 def get_clean_df(path):
@@ -30,4 +34,5 @@ def get_clean_df(path):
     add_trip_duration(df)
     get_day(df)
     get_hour(df)
+    location_to_string(df)
     return clean_df(df)

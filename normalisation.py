@@ -3,7 +3,6 @@ from sklearn.preprocessing import StandardScaler
 
 
 def variable_target(df):
-    print(df["trip_duration"])
     return df["trip_duration"]
 
 
@@ -21,5 +20,4 @@ def normalise(df):
         vp[column] = pd.to_numeric(vp[column], errors='coerce')
 
     df_scaled = pd.DataFrame(scale.fit_transform(vp[columns_to_scale]), columns=columns_to_scale)
-    print(df_scaled)
     return df_scaled

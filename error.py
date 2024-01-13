@@ -1,3 +1,4 @@
+
 def tauxErreure(lignedf):
     valeurpratique = lignedf["trip_duration"]
     valeurEstimer = "fonction de prediction pour la ligne "
