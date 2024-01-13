@@ -22,7 +22,6 @@ def add_trip_duration(df):
     df["pickup_datetime"] = pd.to_datetime(df["pickup_datetime"])
     df["dropoff_datetime"] = pd.to_datetime(df["dropoff_datetime"])
     df["trip_duration"] = (df["dropoff_datetime"] - df["pickup_datetime"]).dt.total_seconds()
-    df["trip_duration"] = pd.to_numeric(df["trip_duration"], errors='coerce')
     return df
 
 

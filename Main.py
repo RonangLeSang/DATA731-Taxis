@@ -7,7 +7,8 @@ if __name__ == "__main__":
 
     df = get_clean_df(path)
     y = variable_target(df)
-    print(y)
     x = normalise(df)
+    y = y.to_numpy().reshape(-1, 1)
+    y.reshape(200000, 1)
     get_model_values(x, y)
 

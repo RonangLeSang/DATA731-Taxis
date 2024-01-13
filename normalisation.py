@@ -15,7 +15,11 @@ def variable_predictive(df):
 def normalise(df):
     scale = StandardScaler()
     vp = variable_predictive(df)
-    df_scaled = scale.fit_transform(vp[["day", "hour", "PULocationID", "DOLocationID"]].values)
-    df_scaled = pd.DataFrame(df_scaled, columns=["day", "hour", "PULocationID", "DOLocationID"])
+    columns_to_scale = ["day", "hour", "PULocationID", "DOLocationID"]
+
+    for column in columns_to_scale:
+        vp[column] = pd.to_numeric(vp[column], errors='coerce')
+
+    df_scaled = pd.DataFrame(scale.fit_transform(vp[columns_to_scale]), columns=columns_to_scale)
     print(df_scaled)
     return df_scaled
