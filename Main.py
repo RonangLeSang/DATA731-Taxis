@@ -1,5 +1,8 @@
-from cleanData import clean_df, load_df
+from cleanData import get_clean_df
 
 if __name__ == "__main__":
     path = "Sources/sample.csv"
-    print(clean_df(load_df(path)))
+
+    df = get_clean_df(path)
+    print(df)
+
