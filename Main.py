@@ -21,13 +21,7 @@ def custom_error_metric(y_true, y_pred, tolerance_seconds):
     return accuracy
 
 
-if __name__ == "__main__":
-    warnings.filterwarnings('ignore')
-    tolerance_seconds = 60
-
-    # path = "Sources/sample.csv"
-    path = "Sources/2019_High_Volume_FHV_Trip_Records.csv"
-
+def save_results(path):
     chunk_size = 1000
     csv_reader = pd.read_csv(path, chunksize=chunk_size)
 
@@ -39,6 +33,19 @@ if __name__ == "__main__":
 
     df = get_clean_df(path)
     df.to_csv("output.csv", index=False)
+    return df
+
+
+if __name__ == "__main__":
+    warnings.filterwarnings('ignore')
+    tolerance_seconds = 240
+
+    path = "Sources/sample.csv"
+    # path = "Sources/2019_High_Volume_FHV_Trip_Records.csv"
+
+    # df = save_results(path)
+    df = pd.read_csv('Sources/result.csv')
+
     print(df.head())
 
     X = df.drop(['trip_duration'], axis=1)
@@ -60,6 +67,9 @@ if __name__ == "__main__":
     rfc = RandomForestClassifier(random_state=0)
     rfc.fit(X_train, y_train)
     y_pred = rfc.predict(X_test)
+    print("__________________results_____________________")
+    print(y_test)
+    print(y_pred)
     accuracy_with_tolerance = custom_error_metric(y_test, y_pred, tolerance_seconds)
 
     print(f'Model accuracy with tolerance: {accuracy_with_tolerance:.4f}')
