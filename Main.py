@@ -1,11 +1,13 @@
-from OLS import get_model_values
+import pandas as pd
+
 from cleanData import get_clean_df
+from OLS import get_model_values
 from normalisation import normalise, variable_target
+from sklearn.metrics import accuracy_score
 import warnings
 from sklearn.model_selection import train_test_split
 import category_encoders as ce
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 
 
 def predict_time(day, hour, PULocationID, DOLocationID):
@@ -23,11 +25,20 @@ if __name__ == "__main__":
     warnings.filterwarnings('ignore')
     tolerance_seconds = 60
 
-    path = "Sources/sample.csv"
+    # path = "Sources/sample.csv"
+    path = "Sources/2019_High_Volume_FHV_Trip_Records.csv"
+
+    chunk_size = 1000
+    csv_reader = pd.read_csv(path, chunksize=chunk_size)
+
+    for i, chunk in enumerate(csv_reader):
+        mode = 'a' if i > 0 else 'w'
+        df = get_clean_df(chunk)
+        df.to_csv("Sources/result.csv", mode=mode, index=False, header=(mode == 'w'))
+        print(f'Chunk {i + 1} written to {"result.csv"}')
 
     df = get_clean_df(path)
-    df = df.loc[~df['PULocationID'].isin(range(230))]
-    df = df.loc[~df['day'].isin(["Sunday", "Saturday"])]
+    df.to_csv("output.csv", index=False)
     print(df.head())
 
     X = df.drop(['trip_duration'], axis=1)
