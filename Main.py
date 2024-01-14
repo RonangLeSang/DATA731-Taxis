@@ -36,44 +36,59 @@ def save_results(path):
     return df
 
 
+def split_x_y(df):
+    X = df.drop(['trip_duration'], axis=1)
+
+    y = df['trip_duration']
+    return train_test_split(X, y, test_size=0.33, random_state=42)
+
+
+def encoding(X_train, X_test):
+    encoder = ce.OrdinalEncoder(cols=['day', 'hour', 'PULocationID', 'DOLocationID'])
+    X_train = encoder.fit_transform(X_train)
+    X_test = encoder.transform(X_test)
+    return X_train, X_test
+
+
+def predict(X_train, y_train, X_test, y_test):
+    rfc = RandomForestClassifier(random_state=0)
+    rfc.fit(X_train, y_train)
+    y_pred = rfc.predict(X_test)
+    return custom_error_metric(y_test, y_pred, tolerance_seconds)
+
+
+def predict_from_path(path):
+    df = pd.read_csv(path)
+    X_train, X_test, y_train, y_test = split_x_y(df)
+    X_train, X_test = encoding(X_train, X_test)
+    return predict(X_train, y_train, X_test, y_test)
+
+
 if __name__ == "__main__":
     warnings.filterwarnings('ignore')
     tolerance_seconds = 240
 
-    path = "Sources/sample.csv"
+    path = "Sources/result.csv"
+    # path = "Sources/sample.csv"
     # path = "Sources/2019_High_Volume_FHV_Trip_Records.csv"
 
     # df = save_results(path)
-    df = pd.read_csv('Sources/result.csv')
+    df = pd.read_csv(path)
 
     print(df.head())
 
-    X = df.drop(['trip_duration'], axis=1)
-
-    y = df['trip_duration']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    X_train, X_test, y_train, y_test = split_x_y(df)
 
     print(X_train.shape, X_test.shape)
     print(X_train.dtypes)
 
-    encoder = ce.OrdinalEncoder(cols=['day', 'hour', 'PULocationID', 'DOLocationID'])
-
-    X_train = encoder.fit_transform(X_train)
-
-    X_test = encoder.transform(X_test)
+    X_train, X_test = encoding(X_train, X_test)
 
     print(X_train.head())
 
-    rfc = RandomForestClassifier(random_state=0)
-    rfc.fit(X_train, y_train)
-    y_pred = rfc.predict(X_test)
-    print("__________________results_____________________")
-    print(y_test)
-    print(y_pred)
-    accuracy_with_tolerance = custom_error_metric(y_test, y_pred, tolerance_seconds)
+    accuracy_with_tolerance = predict(X_train, y_train, X_test, y_test)
 
     print(f'Model accuracy with tolerance: {accuracy_with_tolerance:.4f}')
-
 
     # y = variable_target(df)
     # x = normalise(df)

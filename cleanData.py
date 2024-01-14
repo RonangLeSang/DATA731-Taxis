@@ -31,12 +31,10 @@ def location_to_string(df):
 
 # 259 32
 def get_clean_df(df):
-    # df = load_df(path)
     add_trip_duration(df)
     get_day(df)
     get_hour(df)
     location_to_string(df)
     df = df.loc[df['PULocationID'].isin([259])]
     df = df.loc[df['DOLocationID'].isin([32])]
-    # df = df.loc[~df['day'].isin(["Sunday", "Saturday"])]
     return clean_df(df)
