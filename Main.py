@@ -1,5 +1,4 @@
 import pandas as pd
-
 from cleanData import get_clean_df
 from OLS import get_model_values
 from normalisation import normalise, variable_target
