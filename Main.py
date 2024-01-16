@@ -49,18 +49,18 @@ def encoding(X_train, X_test):
     return X_train, X_test
 
 
-def predict(X_train, y_train, X_test, y_test):
+def predict(X_train, y_train, X_test, y_test, tolerance_seconds):
     rfc = RandomForestClassifier(random_state=0)
     rfc.fit(X_train, y_train)
     y_pred = rfc.predict(X_test)
     return custom_error_metric(y_test, y_pred, tolerance_seconds)
 
 
-def predict_from_path(path):
+def predict_from_path(path, tolerance_seconds):
     df = pd.read_csv(path)
     X_train, X_test, y_train, y_test = split_x_y(df)
     X_train, X_test = encoding(X_train, X_test)
-    return predict(X_train, y_train, X_test, y_test)
+    return predict(X_train, y_train, X_test, y_test, tolerance_seconds)
 
 
 if __name__ == "__main__":
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     print(X_train.head())
 
-    accuracy_with_tolerance = predict(X_train, y_train, X_test, y_test)
+    accuracy_with_tolerance = predict(X_train, y_train, X_test, y_test, tolerance_seconds)
 
     print(f'Model accuracy with tolerance: {accuracy_with_tolerance:.4f}')
 
